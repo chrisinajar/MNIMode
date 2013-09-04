@@ -1,0 +1,18 @@
+{
+	"mainFields": ["MaxScore", "MapMode"], 
+	"fields":
+	{
+		"MaxScore":
+		{
+			"type": "select",
+			"options":
+			[
+				"25 kills",
+				"50 kills",
+				"75 kills",
+				"100 kills",
+				"150 kills"
+			]
+		}
+	}
+}
