@@ -10,50 +10,44 @@ var maxScore = 100,
 	};
 
 plugin.get('LobbyManager', function(lobbyManager){
-	maxScore = configMap[lobbyManager.getOptionsForPlugin('MNIMode')['MaxScore']];
-	
-	if (!(maxScore > 0 && maxScore < 1000)) {
-		maxScore = 100;	
-	}
+	var scoreStr = lobbyManager.getOptionsForPlugin('MNIMode')['MaxScore'];
+	maxScore = scoreStr in configMap ? configMap[scoreStr] : 100;
 });
 
 game.hookEvent("dota_player_kill", onPlayerKill);
 
-function onPlayerKill(event) {
+function onPlayerKilled(event) {
 	var playerId = event.getInt("PlayerID"),
-		client = dota.findClientByPlayerID(playerId),
-		hero = client ? client.netprops.m_hAssignedHero : null,
-		i;
+		client = dota.findClientByPlayerID(playerId);
+		hero = client ? client.netprops.m_hAssignedHero : null;
 
-	if (hero === null) { return };
-		
-	client = null;
+	if (!hero) { return };
+
+	if (hero.netprops.m_iTeamNum == dota.TEAM_DIRE) { radiScore++ };
+	if (hero.netprops.m_iTeamNum == dota.TEAM_RADIANT) { direScore++ };
 	
-	if (hero.netprops.m_iTeamNum === 3) {
-		radiScore += 1;
-		
-		if (radiScore >= maxScore) {
-			// Radiant win!
-			for(i = 0; i < server.clients.length; ++i) {
-				client = server.clients[i];
-				if (client && client.isInGame()) {
-					client.printToChat("Radiant wins!");
-				}
-			}
-			dota.forceWin(dota.TEAM_DIRE);
-		}
-	} else if (hero.netprops.m_iTeamNum === 2) {
-		direScore += 1;
-		
-		if (direScore >= maxScore) {
-			// Radiant win!
-			for(i = 0; i < server.clients.length; ++i) {
-				client = server.clients[i];
-				if (client && client.isInGame()) {
-					client.printToChat("Dire wins!");
-				}
-			}
-			dota.forceWin(dota.TEAM_RADIANT);
-		}
+	print("SCORE: "+radiScore+"-"+direScore);
+	
+	if (radiScore >= maxScore) {
+		// Radiant win!
+		pmpw_game_end(dota.TEAM_DIRE);
+	} else if (direScore >= maxScore) {
+		// Dire win!
+		pmpw_game_end(dota.TEAM_RADIANT);
 	}
+}
+
+function pmpw_game_end(loser) {
+	var wintxt = (loser == dota.TEAM_DIRE) ? "Radiant" : "Dire",
+		i;
+	
+	for(i = 0; i < server.clients.length; ++i) {
+		if(!server.clients[i] || !server.clients[i].isInGame()) {
+			continue;
+		}
+		
+		server.clients[i].printToChat(wintxt + " wins!");
+		server.clients[i].printToChat("Thanks for playing MNI Mode!");
+	}
+	dota.forceWin(loser);
 }
