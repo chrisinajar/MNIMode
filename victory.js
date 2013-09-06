@@ -23,8 +23,8 @@ function onPlayerKilled(event) {
 
 	if (!hero) { return };
 
-	if (hero.netprops.m_iTeamNum == dota.TEAM_DIRE) { radiScore++ };
-	if (hero.netprops.m_iTeamNum == dota.TEAM_RADIANT) { direScore++ };
+	if (hero.netprops.m_iTeamNum === dota.TEAM_DIRE) { radiScore++ };
+	if (hero.netprops.m_iTeamNum === dota.TEAM_RADIANT) { direScore++ };
 	
 	print("SCORE: "+radiScore+"-"+direScore);
 	
@@ -38,7 +38,7 @@ function onPlayerKilled(event) {
 }
 
 function pmpw_game_end(loser) {
-	var wintxt = (loser == dota.TEAM_DIRE) ? "Radiant" : "Dire",
+	var wintxt = (loser === dota.TEAM_DIRE) ? "Radiant" : "Dire",
 		i;
 	
 	for(i = 0; i < server.clients.length; ++i) {
