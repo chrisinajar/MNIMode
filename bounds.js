@@ -1,18 +1,21 @@
 var DIRE = 3,
 	RADIANT = 2,
 	MapBorders = {
-		rad: [ -4500, -4000 ],
-		dire: [ 4000, 3500 ],
-		leftmost: -3400,
-		leftangle: [ -3400, -2600 ],
-		peak: [ -1000, -200 ],
-		lowpeak: [ 3600, -3000 ],
+		rad: [ -6068, -5674 ],
+		dire: [ 6147, 5710 ],
+		leftmost: -1750,
+		leftangle: [ -1750, -4800 ],
+		loft: [150, -2900],
+		roof: [150, -1888],
+		peak: [ 1568, -1888 ],
+		lowpeak: [ 3600, -3100 ],
+		rightwall: 5900,
+		floor: -6300,
 
-		riverGap: [
-			[2800, -2750],
-			[3200, -2500]
-		],
-		riverGapLanding: [ 3150, -3050 ]
+		secretShop: [
+			[ 611, -4582 ],
+			[ 1342, -3885 ]
+		]
 	},
 
 	Teleport = require('teleport.js');
@@ -23,7 +26,7 @@ game.hook("OnGameFrame", onGameFrame);
 
 // enforce map boundaries
 function onGameFrame() {
-	var i, client, hero, id;
+	var i, j, client, heros, hero, id;
 
 	for (i = 0; i < server.clients.length; ++i) {
 		client = server.clients[i];
@@ -32,15 +35,40 @@ function onGameFrame() {
 		id = client.netprops.m_iPlayerID;
 		if (id < 0) { continue; }
 
-		hero = client.netprops.m_hAssignedHero;
-		if (!hero) { continue; }
+		heros = client.getHeroes();
+		if (!heros || !heros.length) { continue; }
 
-		Teleport.checkPortals(hero, client);
+		for (j = 0; j < heros.length; ++j) {
+			hero = heros[j];
+			Teleport.checkPortals(hero, client);
 
-		boundHero(hero, client);
+			boundHero(hero, client);
+		}
 	}
 }
 
+function checkShop(hero, client) {
+/*
+	hero.netprops.m_iCurShop = 0; // Regular shop
+	hero.netprops.m_iCurShop = 1; // Side Shop
+	hero.netprops.m_iCurShop = 2; // Secret Shop
+	hero.netprops.m_iCurShop = 3 - 6; // Not in a shop / I couldnt workout what it does
+*/
+	var x = hero.netprops.m_vecOrigin.x,
+		y = hero.netprops.m_vecOrigin.y,
+		z = hero.netprops.m_vecOrigin.z;
+
+	if (x > MapBorders.secretShop[0][0] && x < MapBorders.secretShop[1][0]
+		&& y > MapBorders.secretShop[0][1] && y < MapBorders.secretShop[1][1]) {
+		if (hero.netprops.m_iCurShop !== 2) {
+			hero.netprops.m_iCurShop = 2;
+		}
+	} else {
+		if (hero.netprops.m_iCurShop !== 3) {
+			hero.netprops.m_iCurShop = 3;
+		}
+	}
+}
 
 MapBorders.angleOffset = MapBorders.leftangle[1] - MapBorders.leftangle[0];
 function boundHero(hero, client) {
@@ -79,15 +107,34 @@ function boundHero(hero, client) {
 		dota.findClearSpaceForUnit(hero, x, y, 0);
 		return;
 	}
+/*
 
+		loft: [150, -2900],
+		roof: [150, 1888],
+
+		*/
+
+	y = y < MapBorders.floor ? MapBorders.floor : y;
 
 	// vertical line on the left
 	if (x <= MapBorders.leftmost) {
 		x = x < MapBorders.leftmost ? MapBorders.leftmost : x;
 
-	// diagonal line on the top left corner
-	} else if (x > MapBorders.leftangle[0] && x <= MapBorders.peak[0]) {
-		y = (y > x + MapBorders.angleOffset) ? x + MapBorders.angleOffset : y;
+	// area above the easy spawn camp
+	} else if (x > MapBorders.leftangle[0] && x <= MapBorders.loft[0]) {
+		if (y < MapBorders.loft[1]) {
+			// diagonal line on the left
+			y = (y > x + MapBorders.angleOffset) ? x + MapBorders.angleOffset : y;
+
+		} else {
+			// vertical line before the roof
+			x = x < MapBorders.loft[0] ? MapBorders.loft[0] : x;
+
+		}
+
+	// roof
+	} else if (x > MapBorders.roof[0] && x <= MapBorders.peak[0]) {
+		y = y > MapBorders.roof[1] ? MapBorders.roof[1] : y;
 
 	// weird angle line along the river
 	} else if (x > MapBorders.peak[0] && x <= MapBorders.lowpeak[0]) {
@@ -95,23 +142,20 @@ function boundHero(hero, client) {
 		x = result.x || x;
 		y = result.y || y;
 
-		// I SPEAK BINARU
-		if (x > MapBorders.riverGap[0][0] && x < MapBorders.riverGap[1][0]
-			&& y > MapBorders.riverGap[0][1] && y < MapBorders.riverGap[1][1]) {
-			// HONOR
-
-			x = MapBorders.riverGapLanding[0];
-			y = MapBorders.riverGapLanding[1];
-		}
-
-	} else {
+	// rightmost roof
+	} else if (x > MapBorders.lowpeak[0] && x <= MapBorders.rightwall) {
 		y = y > MapBorders.lowpeak[1] ? MapBorders.lowpeak[1] : y;
 
+	} else {
+		x = x > MapBorders.rightwall ? MapBorders.rightwall : x;
 	}
 
 	if (origX !== x || origY !== y) {
 		dota.findClearSpaceForUnit(hero, x, y, 0);
 	}
+
+
+	checkShop(hero, client);
 }
 
 

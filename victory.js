@@ -1,4 +1,4 @@
-var maxScore = 100,
+var maxScore = 5,
 	radiScore = 0,
 	direScore = 0,
 	configMap = {
@@ -14,7 +14,7 @@ plugin.get('LobbyManager', function(lobbyManager){
 	maxScore = scoreStr in configMap ? configMap[scoreStr] : 100;
 });
 
-game.hookEvent("dota_player_kill", onPlayerKill);
+game.hookEvent("dota_player_killed", onPlayerKilled);
 
 function onPlayerKilled(event) {
 	var playerId = event.getInt("PlayerID"),
@@ -30,14 +30,14 @@ function onPlayerKilled(event) {
 	
 	if (radiScore >= maxScore) {
 		// Radiant win!
-		pmpw_game_end(dota.TEAM_DIRE);
+		endGame(dota.TEAM_DIRE);
 	} else if (direScore >= maxScore) {
 		// Dire win!
-		pmpw_game_end(dota.TEAM_RADIANT);
+		endGame(dota.TEAM_RADIANT);
 	}
 }
 
-function pmpw_game_end(loser) {
+function endGame(loser) {
 	var wintxt = (loser === dota.TEAM_DIRE) ? "Radiant" : "Dire",
 		i;
 	
