@@ -1,16 +1,5 @@
-var respawn = [];
+var Lib = require('lib.js');
 
-game.hook("OnGameFrame", onGameFrame);
-function onGameFrame() {
-	var i,l,hero;
-
-	for (i=0,l=respawn.length; i<l; ++i) {
-		hero = respawn[i];
-		if (!hero) { continue; }
-		hero.netprops.m_flRespawnTime = 1.0
-	}
-	respawn.length = 0;
-}
 
 game.hookEvent("dota_player_killed", onPlayerKilled);
 function onPlayerKilled(event) {
@@ -19,5 +8,8 @@ function onPlayerKilled(event) {
 		hero = client ? client.netprops.m_hAssignedHero : null;
 
 	if (!hero) { return; }
-	respawn.push(hero);
+
+	Lib.once(function(hero) {
+		hero.netprops.m_flRespawnTime = 1.0;
+	}, hero);
 }

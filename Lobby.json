@@ -11,7 +11,20 @@
 				"50 kills",
 				"75 kills",
 				"100 kills",
-				"150 kills"
+				"150 kills (long game)"
+			]
+		},
+		"ExperienceGain":
+		{
+			"type": "select",
+			"options":
+			[
+				"Off",
+				"Weighted",
+				"Random",
+				"Unweighted",
+				"Medium",
+				"High"
 			]
 		}
 	}

@@ -16,21 +16,13 @@ var configMap = {
 	};
 
 // set up game boundaries
+var Buildings = require('buildings.js');
 require('bounds.js');
 
 game.hook("OnMapStart", onMapStart);
 
 function onMapStart() {
 	var wells, i, towers;
-	
-	
-	for(i = 0; i < server.clients.length; ++i) {
-		client = server.clients[i];
-		if (client && client.isInGame()) {
-			client.printToChat("Welcome to MNI Mode! This is an arena game mode where, after leaving the well, you will be teleported into a small battle area. Fight to the death, try to hold the center valley, and remember that you can only buy consumables with starting gold!");
-			client.printToChat("You can find the secret shop at the center of the battlefield.");
-		}
-	}
 	
 	// get all the wells and remove them
 	// this keeps the heroes from healing themselves
@@ -72,4 +64,6 @@ function onMapStart() {
 	for (i=0; i<wells.length; i+= 1) {
 		wells[i].teleport(MapBorders.runeSpawn[0], MapBorders.runeSpawn[1], 256);
 	}
+
+	Buildings.setupMap();
 }

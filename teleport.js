@@ -18,20 +18,21 @@ var Spawns = [
 	],
 
 	Ports = [
-	// spot in the river where you can get stuck if you have a blink (or get pushed)
+	//RADIANT!
 	{
 		rect: [
-			[ -6608, -6076 ],
+			[ -6608, -6576 ],
 			[ -6068, -5674 ]
 		],
 		dest: Spawns
 	},
 
-	//RADIANT!
+
+	//DIRE!
 	{
 		rect: [
-			[ 6147, 5710 ],
-			[ 6544, 6050 ]
+			[ 6100, 5710 ],
+			[ 6944, 6050 ]
 		],
 		dest: Spawns
 	},
@@ -60,15 +61,6 @@ var Spawns = [
 	// 	],
 	// 	dest: [2250, -2200]
 	// },
-
-	//DIRE!
-	{
-		rect: [
-			[ 6147, 5710 ],
-			[ 6544, 6050 ]
-		],
-		dest: Spawns
-	}
 
 	// // dire bottom
 	// {

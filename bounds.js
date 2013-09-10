@@ -6,15 +6,15 @@ var DIRE = 3,
 		leftmost: -1750,
 		leftangle: [ -1750, -4800 ],
 		loft: [150, -2900],
-		roof: [150, -1888],
-		peak: [ 1568, -1888 ],
+		roof: [150, -1970],
+		peak: [ 1568, -1970 ],
 		lowpeak: [ 3600, -3100 ],
 		rightwall: 5900,
 		floor: -6300,
 
 		secretShop: [
-			[ 611, -4582 ],
-			[ 1342, -3885 ]
+			[ 400, -4800 ],
+			[ 1450, -3850 ]
 		]
 	},
 
@@ -107,12 +107,6 @@ function boundHero(hero, client) {
 		dota.findClearSpaceForUnit(hero, x, y, 0);
 		return;
 	}
-/*
-
-		loft: [150, -2900],
-		roof: [150, 1888],
-
-		*/
 
 	y = y < MapBorders.floor ? MapBorders.floor : y;
 
@@ -147,7 +141,10 @@ function boundHero(hero, client) {
 		y = y > MapBorders.lowpeak[1] ? MapBorders.lowpeak[1] : y;
 
 	} else {
+		// we have to check the Y as well or they can run up the edge into dire bottom tower
 		x = x > MapBorders.rightwall ? MapBorders.rightwall : x;
+		y = y > MapBorders.lowpeak[1] ? MapBorders.lowpeak[1] : y;
+
 	}
 
 	if (origX !== x || origY !== y) {

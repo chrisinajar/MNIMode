@@ -1,13 +1,16 @@
-var maxScore = 5,
-	radiScore = 0,
-	direScore = 0,
+var maxScore = 50,
+	score = {
+		radiant: 0,
+		dire: 0
+	},
 	configMap = {
 		"25 kills": 25,
 		"50 kills": 50,
 		"75 kills": 75,
 		"100 kills": 100,
-		"150 kills": 150
+		"150 kills (long game)": 150
 	};
+
 
 plugin.get('LobbyManager', function(lobbyManager){
 	var scoreStr = lobbyManager.getOptionsForPlugin('MNIMode')['MaxScore'];
@@ -23,15 +26,15 @@ function onPlayerKilled(event) {
 
 	if (!hero) { return };
 
-	if (hero.netprops.m_iTeamNum === dota.TEAM_DIRE) { radiScore++ };
-	if (hero.netprops.m_iTeamNum === dota.TEAM_RADIANT) { direScore++ };
+	if (hero.netprops.m_iTeamNum === dota.TEAM_DIRE) { score.radiant++ };
+	if (hero.netprops.m_iTeamNum === dota.TEAM_RADIANT) { score.dire++ };
 	
-	print("SCORE: "+radiScore+"-"+direScore);
+	print("SCORE: "+score.radiant+"-"+score.dire);
 	
-	if (radiScore >= maxScore) {
+	if (score.radiant >= maxScore) {
 		// Radiant win!
 		endGame(dota.TEAM_DIRE);
-	} else if (direScore >= maxScore) {
+	} else if (score.dire >= maxScore) {
 		// Dire win!
 		endGame(dota.TEAM_RADIANT);
 	}
@@ -51,3 +54,5 @@ function endGame(loser) {
 	}
 	dota.forceWin(loser);
 }
+
+exports.Score = score;
