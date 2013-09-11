@@ -1,5 +1,5 @@
 {
-	"mainFields": ["MaxScore"], 
+	"mainFields": ["MaxScore", "GameMode"],
 	"fields":
 	{
 		"MaxScore":
@@ -14,17 +14,19 @@
 				"150 kills (long game)"
 			]
 		},
-		"ExperienceGain":
+		"GameMode":
 		{
 			"type": "select",
 			"options":
 			[
-				"Off",
-				"Weighted",
-				"Random",
-				"Unweighted",
-				"Medium",
-				"High"
+				"All Pick",
+				"Captain's Mode",
+				"Random Draft",
+				"Single Draft",
+				"All Random",
+				"Limited Pool",
+				"Reverse Captain's Mode",
+				"New Player Pool"
 			]
 		}
 	}

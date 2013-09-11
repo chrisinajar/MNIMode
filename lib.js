@@ -25,6 +25,9 @@ Lib.Hero = function(hero) {
 
 // similar to dota.setHeroLevel but sets xp to a known amount
 Lib.Hero.setHeroLevelXP = function(level, xp) {
+	if (level > 25) { level = 25; }
+	if (level < 1) { level = 1; }
+	
 	var levelDiff = level - this.netprops.m_iCurrentLevel;
 
 	if (levelDiff != 0) {
@@ -45,8 +48,8 @@ Lib.Hero.addXP = function(amount) {
 
 	xp = xp + amount;
 
-	while (dota.getTotalExpRequiredForLevel(lvl) > xp) { lvl--; }
-	while (dota.getTotalExpRequiredForLevel(lvl + 1) < xp) { lvl++; }
+	while (lvl > 1 && dota.getTotalExpRequiredForLevel(lvl) > xp) { lvl--; }
+	while (lvl < 25 && dota.getTotalExpRequiredForLevel(lvl + 1) < xp) { lvl++; }
 	
 	Lib.Hero.setHeroLevelXP.apply(this, [lvl, xp]);
 }
