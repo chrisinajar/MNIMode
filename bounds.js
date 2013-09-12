@@ -40,6 +40,10 @@ function onGameFrame() {
 
 		for (j = 0; j < heros.length; ++j) {
 			hero = heros[j];
+
+			if (!hero.netprops.m_vecOrigin)
+				continue;
+			
 			Teleport.checkPortals(hero, client);
 
 			boundHero(hero, client);
