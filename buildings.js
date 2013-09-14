@@ -30,7 +30,12 @@ var MapBorders = {
 
 	// concept and code samples taken from builder
 	// thanks ash! you're the man!
-	customUnit = false;
+	customUnit = false,
+
+	Lib = require('lib.js'),
+
+	direCourier,
+	radiCourier;
 
 
 game.hook('Dota_OnUnitParsed', onUnitParsed);
@@ -70,6 +75,34 @@ function setupMap() {
 	placeBuilding('models/props_structures/bad_statue001.mdl', [ MapBorders.BottomLeftCorner[0] + 400, MapBorders.BottomLeftCorner[1] + 100, MapBorders.BottomLeftCorner[2] ] );
 	placeBuilding('models/props_structures/bad_statue001.mdl', [ MapBorders.BottomLeftCorner[0] + 400, MapBorders.BottomLeftCorner[1] + 200, MapBorders.BottomLeftCorner[2] ] );
 
+	direCourier = createUnit('npc_dota_courier', dota.TEAM_DIRE, {
+		TeamName: "DOTA_TEAM_BADGUYS",
+		model: "models/props_gameplay/donkey_wings.mdl",
+		level: "10"
+	});
+	direCourier.netprops.m_bFlyingCourier = 1;
+	dota.findClearSpaceForUnit(direCourier, 7068, 7074, 0);
+
+	radiCourier = createUnit('npc_dota_courier', dota.TEAM_RADIANT, {
+		keys: {
+			level: "10",
+			ArmorPhysical: 999,
+			MagicalResistance: 999,
+			MovementCapabilities: "DOTA_UNIT_CAP_MOVE_FLY",
+		}
+	});
+	dota.findClearSpaceForUnit(radiCourier, -7068, -7074, 0);
+
+	resetCourierPermissions();
+}
+
+game.hook('Dota_OnHeroPicked', resetCourierPermissions);
+
+function resetCourierPermissions() {
+	var bitmap = Lib.getBitmaps();
+	server.print("Bitmaps are " + bitmap.dire + ", " + bitmap.radiant);
+	if (direCourier) { direCourier.netprops.m_iIsControllableByPlayer = bitmap.dire; }
+	if (radiCourier) { radiCourier.netprops.m_iIsControllableByPlayer = bitmap.radiant; }
 }
 
 function rightWall() {

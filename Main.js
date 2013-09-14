@@ -8,7 +8,7 @@ var score = require('victory.js').Score,
 	frameCount = 0,
 	gameMode = 1,
 	gameModeMap = {
-		"All Pick": 1,
+		"Not Set": null,
 		"Captain's Mode": 2,
 		"Random Draft": 3,
 		"Single Draft": 4,
@@ -38,7 +38,10 @@ function onGameFrame() {
 
 	cvCreepsNoSpawning.setInt(1);
 	cvEasyMode.setInt(1);
-	cvForceGameMode.setInt(gameMode);
+
+	if (gameMode !== null) {
+		cvForceGameMode.setInt(gameMode);
+	}
 
 	frameCount++;
 
@@ -69,8 +72,6 @@ function onGameFrame() {
 			if (myScore <= 0) {
 				continue;
 			}
-
-			print ("Adding " + myScore);
 
 			hero.addXP(myScore);
 		}

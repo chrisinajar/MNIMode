@@ -10,6 +10,6 @@ function onPlayerKilled(event) {
 	if (!hero) { return; }
 
 	Lib.once(function(hero) {
-		hero.netprops.m_flRespawnTime = 1.0;
+		hero.netprops.m_flRespawnTime = 10.0;
 	}, hero);
 }

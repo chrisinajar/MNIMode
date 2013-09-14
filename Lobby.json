@@ -1,5 +1,5 @@
 {
-	"mainFields": ["MaxScore", "GameMode"],
+	"mainFields": ["MaxScore"],
 	"fields":
 	{
 		"MaxScore":
@@ -19,14 +19,11 @@
 			"type": "select",
 			"options":
 			[
-				"All Pick",
+				"Not Set",
 				"Captain's Mode",
 				"Random Draft",
 				"Single Draft",
-				"All Random",
-				"Limited Pool",
-				"Reverse Captain's Mode",
-				"New Player Pool"
+				"All Random"
 			]
 		}
 	}

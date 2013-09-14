@@ -22,7 +22,7 @@ var Spawns = [
 	{
 		rect: [
 			[ -6608, -6576 ],
-			[ -6068, -5674 ]
+			[ -5000, -5000 ]
 		],
 		dest: Spawns
 	},
@@ -37,60 +37,18 @@ var Spawns = [
 		dest: Spawns
 	},
 
-	// radiant bottom
-	// {
-	// 	rect: [
-	// 		[-4600, -6400],
-	// 		[-4500, -5900]
-	// 	],
-	// 	dest: [5161, -6939]
-	// },
-	// // radiant middle
-	// {
-	// 	rect: [
-	// 		[-5000, -4600],
-	// 		[-4800, -4200]
-	// 	],
-	// 	dest: [-3400, -2950]
-	// },
-	// // radiant top
-	// {
-	// 	rect: [
-	// 		[-6900, -4200],
-	// 		[-6350, -4000]
-	// 	],
-	// 	dest: [2250, -2200]
-	// },
-
-	// // dire bottom
-	// {
-	// 	rect: [
-	// 		[6000, 3500],
-	// 		[6600, 3800]
-	// 	],
-	// 	dest: [5550, -3450]
-	// },
-	// // dire middle
-	// {
-	// 	rect: [
-	// 		[4000, 3500],
-	// 		[4800, 4300]
-	// 	],
-	// 	dest: [-900, -350]
-	// },
-	// // dire top
-	// {
-	// 	rect: [
-	// 		[4000, 5500],
-	// 		[4300, 6000]
-	// 	],
-	// 	dest: [-3160, -7000]
-	// }
+	{
+		rect: [
+			[ 100, -2000 ],
+			[ 300, -1800 ]
+		],
+		dest: [ 288, -2080 ]
+	}
 	];
 	// /Ports
 
 
-function checkPortals(hero, client) {
+function checkPortals(hero) {
 	var x = hero.netprops.m_vecOrigin.x,
 		y = hero.netprops.m_vecOrigin.y,
 		origX = x,

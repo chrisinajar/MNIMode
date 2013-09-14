@@ -1,4 +1,4 @@
-var maxScore = 50,
+var maxScore = 200,
 	score = {
 		radiant: 0,
 		dire: 0
@@ -14,7 +14,7 @@ var maxScore = 50,
 
 plugin.get('LobbyManager', function(lobbyManager){
 	var scoreStr = lobbyManager.getOptionsForPlugin('MNIMode')['MaxScore'];
-	maxScore = scoreStr in configMap ? configMap[scoreStr] : 100;
+	maxScore = scoreStr in configMap ? configMap[scoreStr] : maxScore;
 });
 
 game.hookEvent("dota_player_killed", onPlayerKilled);
@@ -28,8 +28,6 @@ function onPlayerKilled(event) {
 
 	if (hero.netprops.m_iTeamNum === dota.TEAM_DIRE) { score.radiant++ };
 	if (hero.netprops.m_iTeamNum === dota.TEAM_RADIANT) { score.dire++ };
-	
-	print("SCORE: "+score.radiant+"-"+score.dire);
 	
 	if (score.radiant >= maxScore) {
 		// Radiant win!

@@ -51,16 +51,16 @@ function onGameFrame() {
 	}
 }
 
-function checkShop(hero, client) {
+function checkShop(hero, client, vecOrigin) {
 /*
 	hero.netprops.m_iCurShop = 0; // Regular shop
 	hero.netprops.m_iCurShop = 1; // Side Shop
 	hero.netprops.m_iCurShop = 2; // Secret Shop
 	hero.netprops.m_iCurShop = 3 - 6; // Not in a shop / I couldnt workout what it does
 */
-	var x = hero.netprops.m_vecOrigin.x,
-		y = hero.netprops.m_vecOrigin.y,
-		z = hero.netprops.m_vecOrigin.z;
+	var x = vecOrigin.x,
+		y = vecOrigin.y,
+		z = vecOrigin.z;
 
 	if (x > MapBorders.secretShop[0][0] && x < MapBorders.secretShop[1][0]
 		&& y > MapBorders.secretShop[0][1] && y < MapBorders.secretShop[1][1]) {
@@ -76,9 +76,14 @@ function checkShop(hero, client) {
 
 MapBorders.angleOffset = MapBorders.leftangle[1] - MapBorders.leftangle[0];
 function boundHero(hero, client) {
-	var x = hero.netprops.m_vecOrigin.x,
-		y = hero.netprops.m_vecOrigin.y,
-		z = hero.netprops.m_vecOrigin.z,
+	var vecOrigin = hero.netprops.m_vecOrigin;
+
+	if (!vecOrigin) { return; }
+
+	// i don't usually like 2 vars, but it's a lot easier in this case
+	var x = vecOrigin.x,
+		y = vecOrigin.y,
+		z = vecOrigin.z,
 		origX = x,
 		origY = y,
 
@@ -115,11 +120,11 @@ function boundHero(hero, client) {
 	y = y < MapBorders.floor ? MapBorders.floor : y;
 
 	// vertical line on the left
-	if (x <= MapBorders.leftmost) {
-		x = x < MapBorders.leftmost ? MapBorders.leftmost : x;
+	if (x < MapBorders.leftmost) {
+		x = MapBorders.leftmost;
 
 	// area above the easy spawn camp
-	} else if (x > MapBorders.leftangle[0] && x <= MapBorders.loft[0]) {
+	} else if (x >= MapBorders.leftangle[0] && x < MapBorders.loft[0]) {
 		if (y < MapBorders.loft[1]) {
 			// diagonal line on the left
 			y = (y > x + MapBorders.angleOffset) ? x + MapBorders.angleOffset : y;
@@ -131,7 +136,7 @@ function boundHero(hero, client) {
 		}
 
 	// roof
-	} else if (x > MapBorders.roof[0] && x <= MapBorders.peak[0]) {
+	} else if (x >= MapBorders.roof[0] && x <= MapBorders.peak[0]) {
 		y = y > MapBorders.roof[1] ? MapBorders.roof[1] : y;
 
 	// weird angle line along the river
@@ -156,7 +161,7 @@ function boundHero(hero, client) {
 	}
 
 
-	checkShop(hero, client);
+	checkShop(hero, client, vecOrigin);
 }
 
 

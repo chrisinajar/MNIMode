@@ -27,7 +27,7 @@ Lib.Hero = function(hero) {
 Lib.Hero.setHeroLevelXP = function(level, xp) {
 	if (level > 25) { level = 25; }
 	if (level < 1) { level = 1; }
-	
+
 	var levelDiff = level - this.netprops.m_iCurrentLevel;
 
 	if (levelDiff != 0) {
@@ -127,6 +127,36 @@ exports.Hero = Lib.Hero;
 
 /*
  *
+ * Thing
+ *
+ */
+
+Lib.getBitmaps = function() {
+	var direBitmap = 0,
+		radiBitmap = 0,
+		i, cl, hero;
+
+	for (i = 0; i < server.clients.length; ++i) {
+		cl = server.clients[i];
+		if (!cl) { continue; }
+
+		if (cl.netprops.m_iTeamNum === dota.TEAM_DIRE) {
+			direBitmap += (1 << cl.netprops.m_iPlayerID);
+		} else if (cl.netprops.m_iTeamNum === dota.TEAM_RADIANT) {
+			radiBitmap += (1 << cl.netprops.m_iPlayerID);
+		}
+	}
+
+	return {
+		radiant: radiBitmap,
+		dire: direBitmap
+	};
+}
+
+exports.getBitmaps = Lib.getBitmaps;
+
+/*
+ *
  * Easier async control
  *
  */
@@ -157,5 +187,3 @@ Lib.once.onGameFrame = function() {
 game.hook("OnGameFrame", Lib.once.onGameFrame);
 
 exports.once = Lib.once;
-
-
